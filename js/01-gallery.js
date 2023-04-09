@@ -7,14 +7,14 @@ listGalleryRef.innerHTML = newImages;
 listGalleryRef.addEventListener('click', onClickImage);
 
 function creatingNewImages(items) {
-	return items.map((item) =>
+	return items.map(({ original, preview, description }) =>
 		`<li class='gallery__item'>
-			<a class='gallery__link' href='${item.original}'>
+			<a class='gallery__link' href='${original}'>
 				<img 
 					class='gallery__image'
-					src='${item.preview}'
-					data-source='${item.original}'
-					alt='${item.description}'
+					src='${preview}'
+					data-source='${original}'
+					alt='${description}'
 				/>
 			</a>
 		</li>`
@@ -29,8 +29,22 @@ function onClickImage(event) {
 	};
 
 	showModalWindow(event.target.dataset.source);
+	window.addEventListener('keydown', OnKeyPress);
 };
 
 function showModalWindow(source) {
 	basicLightbox.create(`<img width="1400" height="900" src="${source}">`).show();
 };
+
+function OnKeyPress(event) {
+	if (event.code !== 'Escape') {
+		return;
+	};
+
+	if (!document.querySelector('.basicLightbox')) {
+		return;
+	};
+
+	window.removeEventListener('keydown', OnKeyPress);
+	document.querySelector('.basicLightbox').remove();
+}
